@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "JSONs",
+  "name": "Famous JSONs",
   "icons": [
     {
       "src": "favicon.ico",
@@ -8,9 +8,9 @@
       "type": "image/x-icon"
     },
     {
-      "src": "logo192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "mosaic_favicon.jpeg",
+      "type": "image/jpeg",
+      "sizes": "300x300"
     },
     {
       "src": "logo512.png",
