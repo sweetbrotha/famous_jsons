@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import About from './components/About';
 import Footer from './components/Footer';
 import Gallery from './components/Gallery';
-import Generator from './components/Generator';
+import Create from './components/Create';
 import Header from './components/Header';
+import './App.css';
 
 function ConditionalFooter() {
   const location = useLocation();
@@ -39,7 +40,7 @@ function App() {
       <div className="bg-black min-h-screen">
         <Routes>
           <Route path="/" element={<Gallery />} />
-          <Route path="/create" element={<Generator />} />
+          <Route path="/create" element={<Create />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </div>

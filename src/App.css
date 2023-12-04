@@ -1,3 +1,12 @@
+:root {
+  --cybergreen: #34FF00;
+  --cybergold: #FFB800;
+  --lightgreen: #E5FFDF;
+  --lightgray: #E7E7E7;
+  --mediumgray: #B5B5B5;
+  --darkgray: #242424;
+}
+
 .App {
   text-align: center;
 }
@@ -35,4 +44,18 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+textarea::selection {
+  background-color: white;
+  color: var(--cybergreen);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px; /* or any suitable size */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--cybergold);
+  border-radius: 10px;
 }

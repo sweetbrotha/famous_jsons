@@ -1,16 +1,20 @@
 import opentype from 'opentype.js';
-import { FONT_SIZE } from './MosaicGenerator';
+import { FONT_SIZE, MAX_CHAR_SIZE, MAX_DIMENSION } from './MosaicGenerator';
 
-export const download = (svgContent, dimensions) => {
+export const wrapSvgContent = (svgContent, dimensions) => {
+  const width = dimensions.width || MAX_CHAR_SIZE * MAX_DIMENSION;
+  const height = dimensions.height || MAX_CHAR_SIZE * MAX_DIMENSION;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">${svgContent}</svg>`;
+};
+
+export const download = (svgContent, dimensions, uploadName) => {
   // Load the font
   opentype.load('fonts/power.ttf', (err, font) => {
     if (err) {
       console.error('Font could not be loaded: ', err);
     } else {
       // Wrap the SVG content in <svg>
-      const fullSvgContent =
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${dimensions.width} ${dimensions.height}">${svgContent}</svg>`;
-
+      const fullSvgContent = wrapSvgContent(svgContent, dimensions);
       // Parse the full SVG content
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(fullSvgContent, "application/xml");
@@ -21,8 +25,7 @@ export const download = (svgContent, dimensions) => {
         const text = textElement.textContent;
         const textX = parseFloat(textElement.getAttribute('x')) || 0;
         const textY = parseFloat(textElement.getAttribute('y')) || 0;
-        const textWidth = font.getAdvanceWidth(text, FONT_SIZE);
-        const pathX = textX - (textWidth / 2);
+        const pathX = textX;
         const pathY = textY; // might benefit from slight adjustment for alignment-baseline=middle
         const fill = textElement.getAttribute('fill');
         const path = font.getPath(text, pathX, pathY, FONT_SIZE);
@@ -45,7 +48,9 @@ export const download = (svgContent, dimensions) => {
 
       const downloadLink = document.createElement('a');
       downloadLink.href = svgUrl;
-      downloadLink.download = 'image.svg';
+      let fileName = uploadName.split('.').slice(0, -1).join('.');
+      if (!fileName) fileName = "generation"; // fall back to something simple if this doesn't work
+      downloadLink.download = `famous_jsons_${fileName}.svg`;
       document.body.appendChild(downloadLink);
       downloadLink.click();
       document.body.removeChild(downloadLink);

@@ -21,12 +21,16 @@ module.exports = {
         'power': ['Power', 'sans-serif'],
         'blocky': ['Blocky', 'sans-serif'],
         'amcap': ['Amcap', 'sans-serif'],
+        'courier': ['Courier', 'Courier New', 'monospace'],
       },
       textShadow: {
         'cybergreen': '0 0 20px #34FF00',
       },
       textIndent: {
         'reverse': '-2em',
+      },
+      width: {
+        '128': '32rem',
       }
     },
   },

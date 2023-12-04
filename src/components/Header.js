@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
+
+  const [isHovering, setIsHovering] = useState(false);
+
   return (
     <header className="relative w-full h-48 pt-8 bg-repeat-x bg-[length:33%] animate-slide flex items-start" style={{ backgroundImage: 'url("/json_matrix.svg")' }}>
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-b from-transparent to-black" />
 
       <div className="flex w-full mx-auto items-center justify-between z-10">
-        <Link to="/" className="flex justify-start ml-8">
-          <img src="/header_logo.svg" alt="Famous JSONs Logo" className="h-14" />
+      <Link
+          to="/"
+          className="flex items-center justify-start ml-8"
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          <img
+            src={isHovering ? "/header_logo_meta.png" : "/header_logo.png"}
+            alt="Famous JSONs Logo"
+            className="h-24"
+          />
+          {isHovering && (
+            <img
+              src="/all_jsons.gif"
+              alt="All JSONs"
+              className="h-24 ml-4 rounded"
+            />
+          )}
         </Link>
 
         {/* Navigation links on the right */}

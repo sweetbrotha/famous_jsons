@@ -4,7 +4,7 @@ import { download } from './SvgUtilities';
 import svgPanZoom from 'svg-pan-zoom';
 import { debounce } from 'lodash';
 
-export function ImageModal({ isOpen, svgContent, dimensions, onClose }) {
+export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose}) {
   const svgContainerRef = useRef(null);
   const panZoomInstanceRef = useRef(null);
   const minZoomRef = useRef(1); // This gets updated
@@ -13,7 +13,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, onClose }) {
   const [showHelp, setShowHelp] = useState(false);
 
   const triggerRerender = useCallback(() => {
-    // Trigger a re-render which will re-instantiate svg-pan-zoom
+    // Trigger a re-render which re-instantiates svg-pan-zoom
     setRenderTrigger(prev => !prev);
   }, []);
 
@@ -40,12 +40,10 @@ export function ImageModal({ isOpen, svgContent, dimensions, onClose }) {
     const topLimit = -((sizes.viewBox.y + sizes.viewBox.height) * sizes.realZoom) + sizes.height;
     const bottomLimit = 0;
 
-    // Don't allow panning to the left of the SVG's left boundary
+    // Don't allow panning beyond SVG's boundaries
     const customPan = {};
     customPan.x = Math.min(newPan.x, rightLimit);
     customPan.x = Math.max(customPan.x, leftLimit);
-
-    // Don't allow panning above the SVG's top boundary
     customPan.y = Math.min(newPan.y, bottomLimit);
     customPan.y = Math.max(customPan.y, topLimit);
 
@@ -117,7 +115,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, onClose }) {
 
   const handleOnClose = () => {
     resetModal();
-    onClose(); // Call the onClose prop
+    onClose();
   };
 
   const onReset = () => {
@@ -125,7 +123,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, onClose }) {
   };
 
   const onSave = () => {
-    download(svgContent, dimensions);
+    download(svgContent, dimensions, uploadName);
   };
 
   const onHelp = () => {

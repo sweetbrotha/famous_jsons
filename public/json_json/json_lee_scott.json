@@ -2,9 +2,8 @@
   "hometown": "Angel Grove, California",
   "occupation": "Power Ranger",
   "color": "Red",
-  "status": "active",
-  "weapon of choice": "Power Sword",
-  "other swag": [
+  "premier weapon": "Power Sword",
+  "other ranger swag": [
     "Wrist Communicator",
     "Power Morpher",
     "Blade Blaster",
@@ -25,12 +24,11 @@
     "Tommy"
   ],
   "extracurriculars": [
-    "food fairs",
     "time capsules",
     "insect collection",
     "tree-planting",
     "animal rescue"
   ],
-  "mechanical dinosaur piloted": "Tyrannosaurus Dinozord",
-  "career highlight": "defeated the evil Green Ranger single-handedly"
+  "mechanical dinosaur": "Tyrannosaurus Dinozord",
+  "career highlight": "defeated the evil Green Ranger in head-to-head combat"
 }

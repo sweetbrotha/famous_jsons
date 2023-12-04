@@ -14,7 +14,7 @@ function About() {
   }, []);
 
   const renderLines = () => {
-    let fontSize = 1.4; // Base font size in em
+    let fontSize = 1.4; // Starting font size (em)
     const fontSizeDecrease = 0.02;
     let opacity = 1.0; // Starting opacity
     const opacityDecrease = 0.035;
@@ -29,10 +29,8 @@ function About() {
         opacity -= opacityDecrease;
       }
 
-      // Email regex
-      const emailRegex = /(\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b)/g;
-      // URL regex (simple version, for demonstration purposes)
-      const urlRegex = /(\bhttps?:\/\/[^\s]+[^.,;:\s]\b)/g;
+      const emailRegex = /(\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b)/g; // email regex
+      const urlRegex = /(\bhttps?:\/\/[^\s]+[^.,;:\s]\b)/g; // simple URL regex
 
       // Replace emails and URLs with anchor tags
       let modifiedLine = line
@@ -41,7 +39,7 @@ function About() {
 
       return (
         <div
-          className="text-cybergreen indent-reverse"
+          className="text-cybergreen hover:text-cybergold indent-reverse"
           key={index}
           style={{
             fontSize: `${fontSize}em`,
@@ -72,7 +70,7 @@ function About() {
             bottom: 0,
             left: 0,
             width: '100%',
-            height: '25%', // Adjust the height to control the fade effect area
+            height: '25%', // the fade effect area
             backgroundImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1))'
           }}
         />
