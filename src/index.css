@@ -557,8 +557,8 @@ video {
 .min-h-screen {
   min-height: 100vh;
 }
-.w-1\/2 {
-  width: 50%;
+.w-3\/5 {
+  width: 60%;
 }
 .w-4 {
   width: 1rem;
@@ -574,12 +574,6 @@ video {
 }
 .w-full {
   width: 100%;
-}
-.w-2\/3 {
-  width: 66.666667%;
-}
-.w-3\/5 {
-  width: 60%;
 }
 .max-w-md {
   max-width: 28rem;
@@ -731,10 +725,6 @@ video {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
 }
-.py-10 {
-  padding-top: 2.5rem;
-  padding-bottom: 2.5rem;
-}
 .py-2 {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -742,17 +732,17 @@ video {
 .pb-4 {
   padding-bottom: 1rem;
 }
+.pt-10 {
+  padding-top: 2.5rem;
+}
 .pt-2 {
   padding-top: 0.5rem;
-}
-.pt-8 {
-  padding-top: 2rem;
 }
 .pt-5 {
   padding-top: 1.25rem;
 }
-.pt-10 {
-  padding-top: 2.5rem;
+.pt-8 {
+  padding-top: 2rem;
 }
 .text-center {
   text-align: center;
@@ -797,15 +787,6 @@ video {
 }
 .opacity-80 {
   opacity: 0.8;
-}
-.opacity-60 {
-  opacity: 0.6;
-}
-.opacity-40 {
-  opacity: 0.4;
-}
-.opacity-50 {
-  opacity: 0.5;
 }
 .transition-opacity {
   transition-property: opacity;
