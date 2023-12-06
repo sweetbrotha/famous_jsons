@@ -52,10 +52,15 @@ textarea::selection {
 }
 
 .custom-scrollbar::-webkit-scrollbar {
-  width: 4px; /* or any suitable size */
+  width: 4px;
+  height: 4px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background-color: var(--cybergold);
   border-radius: 10px;
+}
+
+.no-scroll {
+  overflow: hidden;
 }

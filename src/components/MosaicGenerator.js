@@ -1,6 +1,7 @@
 // import * as d3 from 'd3';
 export const MAX_DIMENSION = 150;
 export const MAX_CHAR_SIZE = 14;
+export const MAX_IMAGE_SIZE = MAX_CHAR_SIZE * MAX_DIMENSION;
 export const FONT_SIZE_INCREASE = 2;
 export const FONT_SIZE = MAX_CHAR_SIZE + FONT_SIZE_INCREASE;
 export const FONT = `${FONT_SIZE}px Power`;
@@ -63,40 +64,6 @@ const getTextWidth = (text) => {
 };
 
 export const drawMosaic = async (uploadedImage, inputText, background, callback) => {
-  // let jsonName = null;
-
-  // if (fj) {
-  //   jsonName = inputText;
-  //   try {
-  //     // Attempt to load the JSON text
-  //     const textResponse = await fetch(`/json_json/${jsonName}.json`);
-  //     if (!textResponse.ok) throw new Error(`Text file not found: ${jsonName}.json`);
-  //     inputText = await textResponse.text();
-
-  //     // Attempt to load the image, trying both .jpeg and .jpg extensions
-  //     let imageResponse = await fetch(`/json_images/${jsonName}.jpg`);
-  //     if (!imageResponse.ok) {
-  //       throw new Error(`Image file not found: ${jsonName}.jpg`);
-  //     }
-
-  //     const imageBlob = await imageResponse.blob();
-  //     // Resize the image before proceeding
-  //     resizeImage(imageBlob, async (resizedImageBlob) => {
-  //       const resizedImage = new File([resizedImageBlob], "resized_image.jpeg", { type: "image/jpeg" });
-  //       const image = new Image();
-  //       image.src = URL.createObjectURL(resizedImage);
-  //       await new Promise((resolve, reject) => {
-  //         image.onload = () => resolve();
-  //         image.onerror = () => reject(new Error('Image could not be loaded'));
-  //       });
-  //       await privateDrawMosaic(image, inputText, background, jsonName, callback);
-  //     });
-
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert(`An error occurred: ${error.message}`);
-  //   }
-  // } else {
   const image = new Image();
   image.src = URL.createObjectURL(uploadedImage);
   await new Promise((resolve, reject) => {
@@ -133,8 +100,6 @@ const privateDrawMosaic = async (image, inputText, background, callback) => {
     svgContent += tileSvg; // append SVG content of the current tile
   }
 
-  // const logoSvg = await getLogoXml(svgWidth, svgHeight, jsonName);
-  // svgContent += logoSvg;
   callback(svgContent, { width: svgWidth, height: svgHeight });
 };
 
@@ -186,70 +151,3 @@ const processTile = (originalCtx, image, yIndex, tileHeight, inputText, textInde
   tileSvg += '</g>';
   return { newTextIndex: textIndex, tileSvg };
 };
-
-// const getLogoXml = async (svgWidth, svgHeight, jsonName) => {
-//   let logoSvgPart = '';
-//   let bannerSvgPart = '';
-//   if (jsonName) { // no json, no overlays
-//     try {
-//       // ##### TOP RIGHT LOGO #####
-//       const logoResponse = await fetch('/logo_art.svg');
-//       const logoSvgText = await logoResponse.text();
-//       // Create a D3 selection from the SVG text
-//       const logoSelection = d3.create("svg")
-//         .html(logoSvgText)
-//         .select("svg");
-
-//       // Extract the viewBox values
-//       const viewBox = logoSelection.attr("viewBox").split(' ').map(Number);
-//       const [vbX, vbY, vbWidth, vbHeight] = viewBox;
-
-//       // Determine the scale based on the target width
-//       const logoTargetWidth = svgWidth / 5;
-//       const scale = logoTargetWidth / vbWidth;
-
-//       // Calculate the position for the logo
-//       const logoX = svgWidth - logoTargetWidth - LOGO_PADDING;
-//       const logoY = LOGO_PADDING;
-
-//       // Apply the transformations and serialize back to SVG string
-//       logoSelection
-//         .attr("width", logoTargetWidth)
-//         .attr("height", vbHeight * scale)
-//         .attr("viewBox", [vbX, vbY, vbWidth, vbHeight].join(' ')); // Ensuring the viewBox is preserved
-
-//       const logoTransformed = logoSelection.node().outerHTML;
-//       logoSvgPart = `<g transform="translate(${logoX}, ${logoY})">${logoTransformed}</g>`;
-
-//       // ##### BOTTOM LEFT BANNER #####
-//       const bannerResponse = await fetch(`/json_banners/${jsonName}.svg`);
-//       const bannerSvgText = await bannerResponse.text();
-//       // Create a D3 selection from the SVG text
-//       const bannerSelection = d3.create("svg")
-//         .html(bannerSvgText)
-//         .select("svg");
-//       // Extract the viewBox values for banner
-//       const bannerViewBox = bannerSelection.attr("viewBox").split(' ').map(Number);
-//       const [vbXb, vbYb, vbWidthb, vbHeightb] = bannerViewBox;
-//       // Determine the scale for the banner based on the target height
-//       const bannerTargetHeight = svgHeight / 10;
-//       const bannerScale = bannerTargetHeight / vbHeightb;
-//       // Calculate the position for the banner
-//       const bannerX = 0;
-//       const bannerY = svgHeight - bannerTargetHeight - LOGO_PADDING;
-//       // Apply the transformations and serialize back to SVG string for banner
-//       bannerSelection
-//         .attr("width", vbWidthb * bannerScale)
-//         .attr("height", bannerTargetHeight)
-//         .attr("viewBox", [vbXb, vbYb, vbWidthb, vbHeightb].join(' ')); // Ensuring the viewBox is preserved
-//       const bannerTransformed = bannerSelection.node().outerHTML;
-//       bannerSvgPart = `<g transform="translate(${bannerX}, ${bannerY})">${bannerTransformed}</g>`;
-//     } catch (error) {
-//       console.error(`Error fetching images: ${error}`);
-//       throw error; // Rethrow error to be handled by the caller
-//     }
-//   }
-
-//   // Combine logo and banner parts into one SVG group
-//   return `${logoSvgPart}${bannerSvgPart}`;
-// };

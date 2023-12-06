@@ -1,11 +1,30 @@
 import opentype from 'opentype.js';
 import { FONT_SIZE, MAX_CHAR_SIZE, MAX_DIMENSION } from './MosaicGenerator';
 
-export const wrapSvgContent = (svgContent, dimensions) => {
+export const wrapSvgContent = (svgContent, dimensions, additionalAttributes = {}) => {
+  const attributeString = Object.entries(additionalAttributes)
+    .map(([key, value]) => `${key}="${value}"`)
+    .join(' ');
   const width = dimensions.width || MAX_CHAR_SIZE * MAX_DIMENSION;
   const height = dimensions.height || MAX_CHAR_SIZE * MAX_DIMENSION;
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">${svgContent}</svg>`;
+  
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" ${attributeString}>${svgContent}</svg>`;
 };
+
+export const unwrapSvgContent = (svgString) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgString, 'image/svg+xml');
+  const svgElement = doc.querySelector('svg');
+
+  if (!svgElement) return { innerHTML: '', dimensions: { width: 0, height: 0 } };
+
+  const width = svgElement.getAttribute('width') || svgElement.viewBox.baseVal.width;
+  const height = svgElement.getAttribute('height') || svgElement.viewBox.baseVal.height;
+  const innerHTML = svgElement.innerHTML;
+
+  return { innerHTML, dimensions: { width, height } };
+};
+
 
 export const download = (svgContent, dimensions, uploadName) => {
   // Load the font
@@ -48,7 +67,7 @@ export const download = (svgContent, dimensions, uploadName) => {
 
       const downloadLink = document.createElement('a');
       downloadLink.href = svgUrl;
-      let fileName = uploadName.split('.').slice(0, -1).join('.');
+      let fileName = uploadName ? uploadName.split('.').slice(0, -1).join('.') : "generation";
       if (!fileName) fileName = "generation"; // fall back to something simple if this doesn't work
       downloadLink.download = `famous_jsons_${fileName}.svg`;
       document.body.appendChild(downloadLink);

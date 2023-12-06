@@ -1,9 +1,9 @@
 import React from 'react';
 import parse from 'html-react-parser';
-import { wrapSvgContent } from './SvgUtilities'; // Import your utility function
+import { wrapSvgContent } from './SvgUtilities';
 
-const RenderSvg = ({ svgContent, dimensions }) => {
-  const wrappedSvg = wrapSvgContent(svgContent, dimensions);
+const RenderSvg = ({ svgContent, dimensions, ...additionalAttributes }) => {
+  const wrappedSvg = wrapSvgContent(svgContent, dimensions, additionalAttributes);
   return <>{parse(wrappedSvg)}</>;
 };
 

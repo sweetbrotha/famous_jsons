@@ -4,7 +4,7 @@ import { download } from './SvgUtilities';
 import svgPanZoom from 'svg-pan-zoom';
 import { debounce } from 'lodash';
 
-export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose}) {
+export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonName, onClose }) {
   const svgContainerRef = useRef(null);
   const panZoomInstanceRef = useRef(null);
   const minZoomRef = useRef(1); // This gets updated
@@ -100,6 +100,19 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose
     };
   }, [isOpen, renderTrigger, dimensions, svgContent]);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    // Cleanup function to ensure we remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isOpen]);
+
+
   const resetModal = () => {
     // Reset pan/zoom
     if (panZoomInstanceRef.current) {
@@ -140,17 +153,22 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose
 
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-darkgray flex flex-col items-center justify-center z-50 overflow-hidden">
-      <div className="w-full flex justify-center items-start pb-4">
-        <div className={`w-4/5 flex flex-col justify-center items-center transition-opacity duration-1000 ease-in-out ${showHelp ? 'opacity-100' : 'opacity-0'}`}>
-          <p className="text-lightgray text-xs text-center">
-            {'{'} pinch, scroll, or double-click to zoom {'}'}
-          </p>
-          <p className="text-lightgray text-xs text-center">
-            {'{'} click and drag to to pan {'}'}
-          </p>
-        </div>
-      </div>
-      <div className="relative cursor-default" style={svgFrameDimensions}>
+      <button
+        onClick={handleOnClose}
+        className="absolute top-8 right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
+      >
+        ×
+      </button>
+
+      {/* Container for the SVG and its related elements */}
+      <div className="w-full flex flex-col items-center justify-center relative" style={svgFrameDimensions}>
+        {/* Filename Label */}
+        {jsonName && (
+          <div className="absolute top-[-1.25rem] left-0 font-courier text-cybergold text-sm">
+            {`${jsonName}.svg`}
+          </div>
+        )}
+        {/* SVG Container */}
         <svg
           ref={svgContainerRef}
           viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
@@ -158,9 +176,17 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose
           height="100%"
           dangerouslySetInnerHTML={{ __html: svgContent }}
           xmlns="http://www.w3.org/2000/svg"
+          className="ring-1 ring-cybergold"
         />
+        {/* Help Text */}
+        <div className={`absolute top-[-2.5rem] font-courier text-lightgray text-xs text-center transition-opacity duration-1000 ease-in-out ${showHelp ? 'opacity-100' : 'opacity-0'}`}>
+          <p>{'{'} pinch, scroll, or double-click to zoom {'}'}</p>
+          <p>{'{'} click and drag to to pan {'}'}</p>
+        </div>
       </div>
-      <div className="flex space-x-6 pt-2">
+
+      {/* Icon Buttons */}
+      <div className="flex space-x-6 pt-4">
         <IconButton name="reset" onClick={onReset} />
         <IconButton name="save" onClick={onSave} />
         <IconButton name="help" onClick={onHelp} isPressed={showHelp} />
@@ -168,7 +194,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, onClose
       </div>
     </div>
   );
-  
+
 }
 
 export default ImageModal;

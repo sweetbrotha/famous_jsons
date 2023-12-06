@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { resizeImage, drawMosaic } from './MosaicGenerator';
 import { ImageModal } from './ImageModal';
+import RenderSvg from './RenderSvg';
 import { download } from './SvgUtilities';
 
 function Generator() {
@@ -109,16 +110,6 @@ function Generator() {
             </div>
           </div>
         </div>
-
-        {/* <label className="flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={fjChecked}
-            onChange={handleFJCheckboxChange}
-            className="form-checkbox"
-          />
-          <span className="text-white">FJ</span>
-        </label> */}
         <div className="flex w-full mt-6 justify-center">
           <button
             onClick={generateImage}
@@ -151,21 +142,26 @@ function Generator() {
       </div>
       {generatedImage && (
         <div
-          className="flex items-center justify-center w-128 h-128 overflow-hidden cursor-pointer hover:ring-2 hover:ring-cybergreen"
+          className="flex items-center justify-center w-128 h-128 mt-4 overflow-hidden cursor-pointer hover:ring-2 hover:ring-cybergreen"
           onClick={openModal}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox={`0 0 ${generatedDimensions.width} ${generatedDimensions.height}`}
+          <RenderSvg
+            svgContent={generatedImage}
+            dimensions={generatedDimensions}
             width="100%"
             height="100%"
-            dangerouslySetInnerHTML={{ __html: generatedImage }}
           />
         </div>
       )}
 
       {generatedImage &&
-        <ImageModal isOpen={isModalOpen} svgContent={generatedImage} dimensions={generatedDimensions} uploadName={uploadedFileName} onClose={closeModal} />
+        <ImageModal
+          isOpen={isModalOpen}
+          svgContent={generatedImage}
+          dimensions={generatedDimensions}
+          uploadName={uploadedFileName}
+          onClose={closeModal}
+        />
       }
     </div>
   );
