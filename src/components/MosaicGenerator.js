@@ -1,4 +1,3 @@
-// import * as d3 from 'd3';
 export const MAX_DIMENSION = 150;
 export const MAX_CHAR_SIZE = 14;
 export const MAX_IMAGE_SIZE = MAX_CHAR_SIZE * MAX_DIMENSION;

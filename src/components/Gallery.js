@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import GalleryItem from './GalleryItem';
 import ImageModal from './ImageModal';
 import JsonModal from './JsonModal';
@@ -9,12 +10,15 @@ import { MAX_IMAGE_SIZE } from './MosaicGenerator';
 function Gallery() {
   const [jsonFiles, setJsonFiles] = useState([]);
   const [filteredJsonFiles, setFilteredJsonFiles] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [isJsonModalOpen, setIsJsonModalOpen] = useState(false);
   const [imageModalContent, setImageModalContent] = useState('');
   const [selectedJsonName, setSelectedJsonName] = useState('');
   const [selectedJsonContent, setSelectedJsonContent] = useState('');
+
+  const [searchParams] = useSearchParams();
+  const initialSearchTerm = searchParams.get('s') || '';
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm);
 
   useEffect(() => {
     fetch('/jsons.txt')

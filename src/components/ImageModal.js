@@ -17,7 +17,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     setRenderTrigger(prev => !prev);
   }, []);
 
-  const debouncedRerender = debounce(triggerRerender, 250);
+  const debouncedRerender = debounce(triggerRerender, 500);
 
   useEffect(() => {
     window.addEventListener('resize', debouncedRerender);
