@@ -31,7 +31,7 @@ function App() {
   }, []);
 
   if (!fontsLoaded) {
-    return <div>Loading...</div>;
+    return <div className="bg-black min-h-screen text-mediumgray">Loading...</div>;
   }
 
   return (
