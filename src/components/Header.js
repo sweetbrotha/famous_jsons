@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { BASE_OPENSEA_URL, CONTRACT_ADDRESS } from './constants';
 
 const Header = () => {
 
@@ -48,7 +49,7 @@ const Header = () => {
               </Link>
             </li>
             <li className="group">
-              <a href="https://opensea.io" target="_blank" rel="noopener noreferrer" className="relative flex items-center text-lg text-white font-amcap hover:text-lightgreen px-3 py-2 rounded-md font-medium group-hover:text-shadow-cybergreen">
+              <a   href={`${BASE_OPENSEA_URL}/${CONTRACT_ADDRESS}`} target="_blank" rel="noopener noreferrer" className="relative flex items-center text-lg text-white font-amcap hover:text-lightgreen px-3 py-2 rounded-md font-medium group-hover:text-shadow-cybergreen">
                 <span className="absolute left-0 opacity-0 group-hover:opacity-100">{'{'}</span>
                 OpenSea
                 <span className="absolute right-0 opacity-0 group-hover:opacity-100">{'}'}</span>

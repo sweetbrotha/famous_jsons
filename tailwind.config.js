@@ -12,6 +12,7 @@ module.exports = {
       colors: {
         cybergreen: '#34FF00',
         cybergold: '#FFB800',
+        cyberyellow: '#FCF200',
         lightgreen: '#E5FFDF',
         lightgray: '#E7E7E7',
         mediumgray: '#B5B5B5',
