@@ -161,7 +161,7 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
         <div className="flex flex-col items-center justify-center p-6 w-3/4">
           <div className="text-cybergold font-courier">Select a JSON to mint!</div>
           <select
-            className="w-48 m-1 px-4 py-2 font-courier text-darkgray bg-lightgray rounded focus:outline-none focus:ring-2 focus:ring-cybergold"
+            className="w-64 m-1 px-4 py-2 font-courier text-darkgray bg-lightgray rounded focus:outline-none focus:ring-2 focus:ring-cybergold"
             value={selectedJson}
             onChange={(e) => setSelectedJson(e.target.value)}
           >

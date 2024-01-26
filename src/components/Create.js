@@ -142,7 +142,7 @@ function Generator() {
       </div>
       {generatedImage && (
         <div
-          className="flex items-center justify-center w-128 h-128 mt-4 overflow-hidden cursor-pointer hover:ring-2 hover:ring-cybergreen"
+          className="flex items-center justify-center w-128 h-128 mt-4 overflow-hidden cursor-pointer ring-2 ring-white hover:ring-cybergreen"
           onClick={openModal}
         >
           <RenderSvg

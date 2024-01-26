@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { BASE_OPENSEA_URL, CONTRACT_ADDRESS } from './constants';
 
 const Header = () => {
-
+  const location = useLocation();
   const [isHovering, setIsHovering] = useState(false);
+
+  // Check if the current page is the homepage
+  const isHomePage = location.pathname === '/';
 
   return (
     <header className="relative w-full h-48 pt-8 bg-repeat-x bg-[length:33%] animate-slide flex items-start" style={{ backgroundImage: 'url("/json_matrix.svg")' }}>
@@ -13,7 +16,7 @@ const Header = () => {
       <div className="flex w-full mx-auto items-center justify-between z-10">
       <Link
           to="/"
-          className="flex items-center justify-start ml-8"
+          className={`flex items-center justify-start ml-8 ${isHomePage ? 'cursor-default' : 'cursor-pointer'}`}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
         >
