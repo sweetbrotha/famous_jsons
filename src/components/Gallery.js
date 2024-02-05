@@ -10,6 +10,9 @@ import { unwrapSvgContent } from './SvgUtilities';
 import { MAX_IMAGE_SIZE } from './MosaicGenerator';
 
 function Gallery() {
+
+  const MAX_CACHE_SIZE = 3;
+
   const [jsonFiles, setJsonFiles] = useState([]);
   const [jsonIndexMap, setJsonIndexMap] = useState({});
   const [filteredJsonFiles, setFilteredJsonFiles] = useState([]);
@@ -20,6 +23,7 @@ function Gallery() {
   const [selectedJsonName, setSelectedJsonName] = useState('');
   const [selectedJsonContent, setSelectedJsonContent] = useState('');
   const [showUnmintedOnly, setShowUnmintedOnly] = useState(false);
+  const [svgCache, setSvgCache] = useState({});
   const { projectState, isFetched } = useProjectState();
 
   const [searchParams] = useSearchParams();
@@ -49,46 +53,71 @@ function Gallery() {
   }
 
   useEffect(() => {
-    // Fetch the initial list of JSON files
-    fetchJsons();
+    fetchJsons(); // Fetch the initial list of JSON files
+    return () => {
+      setSvgCache({}); // Cleanup function clears the cache
+    };
   }, []);
 
+  // Filter JSONs
   useEffect(() => {
-    let matchedFiles = jsonFiles;
-
+    let matchedFiles = jsonFiles; // start with all JSONs
+    // filter by unminted tokens
     if (showUnmintedOnly && isFetched) {
       matchedFiles = matchedFiles.filter(({ jsonName }, index) =>
         !projectState.token_ids_minted.includes(index.toString())
       );
     }
-
+    // now filter by search term
     const lowercasedSearchTerm = searchTerm.toLowerCase();
     matchedFiles = matchedFiles.filter(({ jsonName, jsonContent }) =>
       jsonName.toLowerCase().includes(lowercasedSearchTerm) ||
       jsonContent.toLowerCase().includes(lowercasedSearchTerm)
     );
-
+    // set filtered result
     setFilteredJsonFiles(matchedFiles);
   }, [searchTerm, jsonFiles, showUnmintedOnly, isFetched, projectState]);
+
+  const closeImageModal = () => {
+    setIsImageModalOpen(false);
+    setImageModalContent(''); // clear large content, free up memory
+  }
 
   const openImageModal = (jsonName) => {
     // never have multiple modals open
     setIsJsonModalOpen(false);
     setIsMintModalOpen(false);
     setSelectedJsonName(jsonName);
-    fetch(`/json_art/${jsonName}.svg`)
-      .then(response => response.text())
-      .then(svgString => {
-        const { innerHTML } = unwrapSvgContent(svgString);
-        setImageModalContent(innerHTML);
-        setIsImageModalOpen(true);
-      })
-      .catch(error => console.error('Error fetching SVG:', error));
+    if (svgCache[jsonName]) {
+      setImageModalContent(svgCache[jsonName].content);
+      setIsImageModalOpen(true);
+    } else {
+      fetch(`/json_art/${jsonName}.svg`)
+        .then(response => response.text())
+        .then(svgString => {
+          const { innerHTML } = unwrapSvgContent(svgString);
+          // Prepare updated cache with new entry
+          const updatedCache = { ...svgCache };
+          updatedCache[jsonName] = { content: innerHTML, timestamp: Date.now() };
+          // If cache exceeds MAX_CACHE_SIZE, remove the oldest entry
+          const cacheKeys = Object.keys(updatedCache);
+          if (cacheKeys.length > MAX_CACHE_SIZE) {
+            const oldestKey = cacheKeys.reduce((oldest, key) => {
+              return (updatedCache[oldest].timestamp > updatedCache[key].timestamp) ? key : oldest;
+            }, cacheKeys[0]);
+            delete updatedCache[oldestKey];
+          }
+          setSvgCache(updatedCache);
+          setImageModalContent(innerHTML);
+          setIsImageModalOpen(true);
+        })
+        .catch(error => console.error('Error fetching SVG:', error));
+    }
   };
 
   const openJsonModal = (jsonName, jsonContent) => {
     // never have multiple modals open
-    setIsImageModalOpen(false);
+    closeImageModal();
     setIsMintModalOpen(false);
     setSelectedJsonName(jsonName);
     setSelectedJsonContent(jsonContent);
@@ -97,7 +126,7 @@ function Gallery() {
 
   const openMintModal = (jsonName) => {
     // never have multiple modals open
-    setIsImageModalOpen(false);
+    closeImageModal();
     setIsJsonModalOpen(false);
     setSelectedJsonName(jsonName);
     setIsMintModalOpen(true);
@@ -188,7 +217,7 @@ function Gallery() {
           svgContent={imageModalContent}
           dimensions={{ width: MAX_IMAGE_SIZE, height: MAX_IMAGE_SIZE }}
           jsonName={selectedJsonName}
-          onClose={() => setIsImageModalOpen(false)}
+          onClose={closeImageModal}
         />
         <JsonModal
           isOpen={isJsonModalOpen}

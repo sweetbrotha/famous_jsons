@@ -6,7 +6,7 @@ import { useProjectState } from './ProjectStateProvider';
 function GalleryItem({ jsonName, jsonContent, itemId, onArtClick, onJsonClick, isMinted, onMintClick }) {
   
   const { isFetched } = useProjectState();
-  const svgUrl = `/json_art/${jsonName}.svg`;
+  const pngUrl = `/json_art_small/${jsonName}.png`;
 
   const handleArtClick = () => {
     if (onArtClick) {
@@ -33,8 +33,8 @@ function GalleryItem({ jsonName, jsonContent, itemId, onArtClick, onJsonClick, i
 
 
   return (
-    <div className="w-96 h-96 cursor-pointer hover:ring-2 hover:ring-cybergreen">
-      <img onClick={onArtClick} src={svgUrl} alt={jsonName} className="w-full h-full" />
+    <div className="w-72 h-72 cursor-pointer hover:ring-2 hover:ring-cybergreen">
+      <img onClick={onArtClick} src={pngUrl} alt={jsonName} className="w-full h-full" />
       <div className="flex justify-center space-x-6 pt-4">
         <IconButton name="art" onClick={handleArtClick} />
         <IconButton name="json" onClick={handleJsonClick} />

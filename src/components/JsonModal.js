@@ -38,7 +38,7 @@ export function JsonModal({ isOpen, jsonName, jsonContent, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-darkgray bg-opacity-90 flex flex-col items-center justify-center z-50 overflow-hidden">
+    <div className="fixed top-0 left-0 w-full h-full bg-darkgray bg-opacity-95 flex flex-col items-center justify-center z-50 overflow-hidden">
       <button
         onClick={onClose}
         className="absolute top-8 right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
