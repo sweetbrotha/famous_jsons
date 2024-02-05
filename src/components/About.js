@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useMediaQuery } from './MediaQueryUtils';
 
 function About() {
   const [aboutLines, setAboutLines] = useState([]);
+  const isMdOrLarger = useMediaQuery('(min-width: 768px)'); // 'md' breakpoint
 
   useEffect(() => {
     fetch('/about.json')
@@ -14,7 +16,8 @@ function About() {
   }, []);
 
   const renderLines = () => {
-    let fontSize = 1.4; // Starting font size (em)
+    
+    let fontSize = isMdOrLarger ? 1.4 : 0.7; // Starting font size (em)
     const fontSizeDecrease = 0.02;
     let opacity = 1.0; // Starting opacity
     const opacityDecrease = 0.035;
@@ -34,8 +37,8 @@ function About() {
 
       // Replace emails and URLs with anchor tags
       let modifiedLine = line
-        .replace(emailRegex, (email) => `<a href="mailto:${email}" class="text-cybergreen hover:text-lightgreen underline">${email}</a>`)
-        .replace(urlRegex, (url) => `<a href="${url}" class="text-cybergreen hover:text-lightgreen underline" target="_blank">${url}</a>`);
+        .replace(emailRegex, (email) => `<a href="mailto:${email}" class="text-cybergreen hover:text-lightgreen underline break-all">${email}</a>`)
+        .replace(urlRegex, (url) => `<a href="${url}" class="text-cybergreen hover:text-lightgreen underline break-all" target="_blank">${url}</a>`);
 
       return (
         <div
@@ -54,8 +57,8 @@ function About() {
   };
 
   return (
-    <div className="flex flex-col items-center pt-5">
-      <div className="w-3/5 pt-10 whitespace-pre-wrap" style={{ fontFamily: 'Courier, monospace', textAlign: 'left' }}>
+    <div className="flex flex-col items-center md:pt-5">
+      <div className="w-3/4 md:w-3/5 py-4 md:py-10 whitespace-pre-wrap" style={{ fontFamily: 'Courier, monospace', textAlign: 'left' }}>
         {renderLines()}
       </div>
       <div className="relative w-full">

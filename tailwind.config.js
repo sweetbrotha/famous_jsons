@@ -24,8 +24,13 @@ module.exports = {
         'amcap': ['Amcap', 'sans-serif'],
         'courier': ['Courier', 'Courier New', 'monospace'],
       },
+      fontSize: {
+        'xxs': '0.6rem',
+        'xxxs': '0.45rem',
+      },
       textShadow: {
         'cybergreen': '0 0 20px #34FF00',
+        'black': '0 0 20px #000000',
       },
       textIndent: {
         'reverse': '-2em',
