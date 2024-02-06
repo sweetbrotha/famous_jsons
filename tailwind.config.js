@@ -28,6 +28,9 @@ module.exports = {
         'xxs': '0.6rem',
         'xxxs': '0.45rem',
       },
+      height: {
+        '128': '32rem',
+      },
       textShadow: {
         'cybergreen': '0 0 20px #34FF00',
         'black': '0 0 20px #000000',
