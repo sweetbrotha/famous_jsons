@@ -140,13 +140,13 @@ function Gallery() {
         <img src="/left_bracket.svg" alt="Left Bracket" className="hidden md:block h-32 w-auto m-2" />
 
         <div className={`flex flex-col items-center p-2 md:p-4`}>
-          <p className="text-white text-sm font-courier mb-0.5">
+          <p className="text-white text-sm font-courier">
             Want to own a JSON?
           </p>
-          <p className="text-cybergreen font-courier text-3xl md:text-4xl text-shadow-cybergreen">
+          <p className="text-cybergreen font-amcap my-1 text-3xl md:text-4xl text-shadow-cybergreen">
             {jsonsRemaining}
           </p>
-          <p className="text-white text-sm font-courier mt-0.5 mb-2">
+          <p className="text-white text-sm font-courier mb-2">
             JSON{jsonsRemaining === 1 ? '' : 's'} remain{jsonsRemaining === 1 ? 's' : ''}!
           </p>
           <button

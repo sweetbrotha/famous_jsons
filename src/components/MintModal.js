@@ -11,6 +11,18 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
   const { projectState, updateProjectState, isFetched } = useProjectState();
   const { web3, contract, userAddress, isWalletConnected, connectWallet } = useWeb3();
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    // Cleanup function to ensure we remove the class when the component unmounts
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [isOpen]);
+
   const getIndexByName = useCallback((name) => {
     return jsonFiles.findIndex(file => file.jsonName === name);
   }, [jsonFiles]);
@@ -127,17 +139,17 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
     <div className="fixed top-0 left-0 w-full h-full bg-darkgray bg-opacity-95 flex flex-col items-center justify-center z-50 overflow-hidden">
       <button
         onClick={onClose}
-        className="absolute top-8 right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
+        className="absolute top-3 md:top-8 right-4 md:right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
       >
         ×
       </button>
 
       {/* Modal Content Container */}
-      <div className="w-1/2 h-4/5 flex flex-col items-center relative bg-black rounded ring-2 ring-cybergreen overflow-y-auto custom-scrollbar">
+      <div className="w-56 md:w-1/2 h-4/5 flex flex-col items-center relative bg-black rounded ring-2 ring-cybergreen overflow-y-auto custom-scrollbar">
 
-        <div className="w-4/5 flex flex-col justify-start mt-4 text-sm text-mediumgray font-courier">
+        <div className="w-4/5 flex flex-col justify-start mt-4 text-xs md:text-sm text-mediumgray font-courier">
           <p className="text-cybergreen">Mint a JSON!</p>
-          <ul className="ml-2 mb-4 list-disc list-inside">
+          <ul className="ml-1 md:ml-2 mb-2 md:mb-4 list-disc list-inside">
             <li>Mint price starts at 10 ETH &times; # JSONs minted
               <span className="font-bold text-white"> ({(projectState.token_ids_minted || []).length})</span>
             </li>
@@ -158,10 +170,10 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
           </ul>
         </div>
         {/* Dropdown Selection for JSON names */}
-        <div className="flex flex-col items-center justify-center p-6 w-3/4">
-          <div className="text-cybergold font-courier">Select a JSON to mint!</div>
+        <div className="flex flex-col items-center justify-center p-2 md:p-6 w-4/5 md:w-3/4">
+          <div className="text-cybergold font-courier text-xs md:text-base">Select a JSON to mint!</div>
           <select
-            className="w-64 m-1 px-4 py-2 font-courier text-darkgray bg-lightgray rounded focus:outline-none focus:ring-2 focus:ring-cybergold"
+            className="w-48 md:w-64 m-1 px-2 md:px-4 py-1.5 md:py-2 text-sm md:text-base font-courier text-darkgray bg-lightgray rounded focus:outline-none focus:ring-2 focus:ring-cybergold"
             value={selectedJson}
             onChange={(e) => setSelectedJson(e.target.value)}
           >
@@ -180,15 +192,15 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
 
         {selectedJson && (
           <div className="m-2">
-            <img src={selectedSvgUrl} alt={selectedJson} className="w-64 h-64" />
+            <img src={selectedSvgUrl} alt={selectedJson} className="w-40 h-40 md:w-64 md:h-64" />
           </div>
         )}
 
         {/* Button Container */}
-        <div className="flex flex-col w-full justify-center items-center my-4">
+        <div className="flex flex-col w-full justify-center items-center my-2 md:my-4">
           <button
             onClick={handleMintClick}
-            className={`w-40 h-10 my-2 text-cybergreen bg-darkgray ring-2 ring-cybergreen font-bold font-courier rounded focus:outline-none ${isWalletConnected && (!selectedJson || isMinted || isMinting) ? 'opacity-50 cursor-not-allowed' : 'hover:text-black hover:bg-cybergreen'}`}
+            className={`w-40 h-10 my-2 text-cybergreen bg-darkgray ring-2 ring-cybergreen font-bold font-courier rounded focus:outline-none ${isWalletConnected && (!selectedJson || isMinted || isMinting) ? 'opacity-50 cursor-not-allowed' : 'md:hover:text-black md:hover:bg-cybergreen'}`}
             disabled={isWalletConnected && (!selectedJson || isMinted || isMinting)}
             style={{ backgroundImage: isMinting ? 'url(/loading_mint.gif)' : 'none', backgroundSize: 'cover' }}
           >
@@ -204,7 +216,7 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
 
         {/* Status Message */}
         {statusMessage && (
-          <div className="text-cyberyellow text-sm font-courier text-center mt-1">
+          <div className="text-cyberyellow text-sm font-courier text-center mb-2">
             {statusMessage}
           </div>
         )}

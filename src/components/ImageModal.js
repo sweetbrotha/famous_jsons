@@ -135,7 +135,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-darkgray opacity-95 flex flex-col items-center justify-center z-50 overflow-hidden">
+    <div className="fixed top-0 left-0 w-full h-full bg-darkgray opacity-[.99] flex flex-col items-center justify-center z-50 overflow-hidden">
       <button
         onClick={onClose}
         className="absolute top-4 md:top-8 right-5 md:right-8 text-white text-xl font-bold font-courier hover:text-cybergold"

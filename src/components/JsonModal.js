@@ -47,7 +47,7 @@ export function JsonModal({ isOpen, jsonName, jsonContent, onClose }) {
       </button>
   
       {/* Modal Content Container */}
-      <div className="w-3/4 h-3/4 md:w-4/5 flex flex-col items-center relative">
+      <div className="h-3/5 w-3/4 md:h-2/3 md:w-4/5 flex flex-col items-center relative">
         {/* Copied to Clipboard Message */}
         <p className={`absolute top-[0.25rem] md:top-[-1rem] left-1/2 transform -translate-x-1/2 whitespace-nowrap font-courier text-lightgray text-xxxs md:text-xs text-center transition-opacity duration-1000 ease-in-out ${isCopied ? 'opacity-100' : 'opacity-0'}`}>
           {'{ copied to clipboard }'}
