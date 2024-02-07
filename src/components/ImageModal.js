@@ -5,9 +5,11 @@ import svgPanZoom from 'svg-pan-zoom';
 import { debounce } from 'lodash';
 
 export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonName, onClose }) {
+  
+  const MIN_ZOOM = 1;
+
   const svgContainerRef = useRef(null);
   const panZoomInstanceRef = useRef(null);
-  const minZoomRef = useRef(1); // This gets updated
   const [svgFrameDimensions, setSvgFrameDimensions] = useState({});
   const [renderTrigger, setRenderTrigger] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -29,7 +31,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
 
   const beforeZoom = (_, newZoom) => {
     // Prevent zooming out beyond the initial zoom level
-    return newZoom >= minZoomRef.current;
+    return newZoom >= MIN_ZOOM;
   };
 
   const beforePan = (_, newPan) => {
@@ -72,24 +74,16 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       }
     }
     if (svgContainerRef.current) {
-      // Destroy the current panZoomInstance if it exists
+      // Destroy the current panZoomInstance if it exists (not sure if necessary)
       if (panZoomInstanceRef.current) {
         panZoomInstanceRef.current.destroy();
         panZoomInstanceRef.current = null;
       }
       // Initialize svg-pan-zoom
       panZoomInstanceRef.current = svgPanZoom(svgContainerRef.current, {
-        zoomEnabled: true,
-        controlIconsEnabled: false,
-        fit: true,
-        center: true,
         beforePan: beforePan,
         beforeZoom: beforeZoom,
       });
-      // Set the minimum zoom level after the initial fit
-      setTimeout(() => {
-        minZoomRef.current = panZoomInstanceRef.current.getZoom();
-      }, 100);
     }
     return () => {
       // Cleanup svg-pan-zoom instance when component unmounts or dimensions change
@@ -112,25 +106,6 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     };
   }, [isOpen]);
 
-
-  const resetModal = () => {
-    // Reset pan/zoom
-    if (panZoomInstanceRef.current) {
-      panZoomInstanceRef.current.resetZoom();
-      panZoomInstanceRef.current.resetPan();
-      panZoomInstanceRef.current.fit();
-      panZoomInstanceRef.current.center();
-      minZoomRef.current = panZoomInstanceRef.current.getZoom();
-    }
-    // Reset help text and button state
-    setShowHelp(false);
-  };
-
-  const handleOnClose = () => {
-    resetModal();
-    onClose();
-  };
-
   const onReset = () => {
     triggerRerender();
   };
@@ -144,18 +119,26 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
   };
 
   useEffect(() => {
-    if (!isOpen) {
-      resetModal(); // reset on close
+    setShowHelp(false);
+    let timeoutId;
+    if (isOpen) {
+      // we sometimes need a re-render once everything is calculated
+      timeoutId = setTimeout(() => {
+        triggerRerender();
+      }, 200);
     }
-  }, [isOpen]);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [isOpen, triggerRerender]);  
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full bg-black opacity-95 flex flex-col items-center justify-center z-50 overflow-hidden">
+    <div className="fixed top-0 left-0 w-full h-full bg-darkgray opacity-95 flex flex-col items-center justify-center z-50 overflow-hidden">
       <button
-        onClick={handleOnClose}
-        className="absolute top-8 right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
+        onClick={onClose}
+        className="absolute top-4 md:top-8 right-5 md:right-8 text-white text-xl font-bold font-courier hover:text-cybergold"
       >
         ×
       </button>
@@ -164,7 +147,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       <div className="w-full flex flex-col items-center justify-center relative" style={svgFrameDimensions}>
         {/* Filename Label */}
         {jsonName && (
-          <div className="absolute top-[-1.25rem] left-0 font-courier text-cybergold text-sm">
+          <div className="absolute top-[-1.1rem] md:top-[-1.25rem] left-0 font-courier text-cybergold text-xs md:text-sm">
             {`${jsonName}.svg`}
           </div>
         )}
@@ -176,25 +159,24 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
           height="100%"
           dangerouslySetInnerHTML={{ __html: svgContent }}
           xmlns="http://www.w3.org/2000/svg"
-          className="ring-1 ring-cybergold"
+          className="ring-1 ring-cybergold cursor-default"
         />
         {/* Help Text */}
-        <div className={`absolute top-[-2.5rem] font-courier text-lightgray text-xs text-center transition-opacity duration-1000 ease-in-out ${showHelp ? 'opacity-100' : 'opacity-0'}`}>
+        <div className={`absolute top-[-2.5rem] font-courier text-lightgray text-xxxs md:text-xs text-center transition-opacity duration-1000 ease-in-out ${showHelp ? 'opacity-100' : 'opacity-0'}`}>
           <p>{'{'} pinch, scroll, or double-click to zoom {'}'}</p>
           <p>{'{'} click and drag to to pan {'}'}</p>
         </div>
       </div>
 
       {/* Icon Buttons */}
-      <div className="flex space-x-6 pt-4">
+      <div className="flex space-x-4 md:space-x-6 pt-4">
         <IconButton name="reset" onClick={onReset} />
-        <IconButton name="save" onClick={onSave} />
+        {!jsonName && <IconButton name="save" onClick={onSave} />}
         <IconButton name="help" onClick={onHelp} isPressed={showHelp} />
-        <IconButton name="close" onClick={handleOnClose} />
+        <IconButton name="close" onClick={onClose} />
       </div>
     </div>
   );
-
 }
 
 export default ImageModal;

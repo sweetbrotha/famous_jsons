@@ -33,9 +33,9 @@ function GalleryItem({ jsonName, jsonContent, itemId, onArtClick, onJsonClick, i
 
 
   return (
-    <div className="w-72 h-72 cursor-pointer hover:ring-2 hover:ring-cybergreen">
+    <div className="w-48 h-48 md:w-72 md:h-72 cursor-pointer md:hover:ring-2 md:hover:ring-cybergreen">
       <img onClick={onArtClick} src={pngUrl} alt={jsonName} className="w-full h-full" />
-      <div className="flex justify-center space-x-6 pt-4">
+      <div className="flex justify-center space-x-4 md:space-x-6 pt-3 md:pt-4">
         <IconButton name="art" onClick={handleArtClick} />
         <IconButton name="json" onClick={handleJsonClick} />
         {isMinted ? (

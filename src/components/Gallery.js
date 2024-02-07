@@ -136,21 +136,18 @@ function Gallery() {
 
   return (
     <div className="flex flex-col w-full items-center">
-      <div className={`flex flex-row justify-between items-center w-128 my-4 ring-1 ring-lightgray rounded bg-lightgray bg-opacity-20 transition-opacity duration-1000 ${isFetched ? 'opacity-100' : 'opacity-0'}`}>
-        <img src="/left_bracket.svg" alt="Left Bracket" className="h-32 w-auto m-2" />
+      <div className={`flex flex-row justify-center md:justify-between items-center w-60 md:w-128 my-4 ring-1 ring-lightgray rounded bg-lightgray bg-opacity-20 transition-opacity duration-1000 ${isFetched ? 'opacity-100' : 'opacity-0'}`}>
+        <img src="/left_bracket.svg" alt="Left Bracket" className="hidden md:block h-32 w-auto m-2" />
 
-        <div className={`flex flex-col items-center p-4`}>
-          <p className="text-white text-xs font-courier mb-0.5">
+        <div className={`flex flex-col items-center p-2 md:p-4`}>
+          <p className="text-white text-sm font-courier mb-0.5">
             Want to own a JSON?
           </p>
-          <p className="text-white text-sm font-courier mb-0.5">
-            There are
-          </p>
-          <p className="text-cybergreen font-courier text-4xl text-shadow-cybergreen">
+          <p className="text-cybergreen font-courier text-3xl md:text-4xl text-shadow-cybergreen">
             {jsonsRemaining}
           </p>
-          <p className="text-white font-courier mt-0.5 mb-2">
-            JSON{jsonsRemaining === 1 ? '' : 's'} remaining
+          <p className="text-white text-sm font-courier mt-0.5 mb-2">
+            JSON{jsonsRemaining === 1 ? '' : 's'} remain{jsonsRemaining === 1 ? 's' : ''}!
           </p>
           <button
             className="w-40 h-10 ring-2 ring-cybergold text-white hover:text-cybergreen font-bold font-courier py-2 px-4 rounded mt-1"
@@ -162,19 +159,19 @@ function Gallery() {
           </button>
         </div>
 
-        <img src="/right_bracket.svg" alt="Right Bracket" className="h-32 w-auto m-2" />
+        <img src="/right_bracket.svg" alt="Right Bracket" className="hidden md:block h-32 w-auto m-2" />
       </div>
 
       <div className="flex flex-col items-center mt-2">
-        <div className="search-bar flex items-center">
+        <div className="search-bar flex flex-col md:flex-row items-center">
           <input
             type="text"
             placeholder="Search JSONs"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
-            className="focus:outline-none focus:ring-2 focus:ring-cybergold rounded bg-lightgray font-courier text-darkgray p-1 pl-2 w-64"
+            className="focus:outline-none focus:ring-2 focus:ring-cybergold rounded bg-lightgray font-courier text-darkgray p-1 pl-2 w-48 md:w-64"
           />
-          <label className="ml-4 flex items-center cursor-pointer">
+          <label className="md:ml-4 mt-2 md:mt-0 flex items-center cursor-pointer">
             <input
               type="checkbox"
               checked={showUnmintedOnly}
@@ -182,20 +179,19 @@ function Gallery() {
               className="opacity-0 absolute h-8 w-8"
             />
             <span
-              className={`checkmark h-4 w-4 bg-black rounded-sm inline-block border border-cybergreen ${showUnmintedOnly ? 'bg-cybergold' : ''
-                }`}
+              className={`checkmark h-4 w-4 bg-black rounded-sm inline-block border border-lightgray ${showUnmintedOnly ? 'bg-cybergreen' : ''}`}
             ></span>
-            <span className="ml-1 font-courier text-cybergreen">Unminted</span>
+            <span className="ml-2 font-courier text-lightgray">Unminted?</span>
           </label>
         </div>
         {(searchTerm || showUnmintedOnly) && (
-          <span className="font-courier text-cybergreen text-sm mt-2">
+          <span className="font-courier text-cybergreen text-sm mt-2 opacity-50">
             {`{ ${filteredJsonFiles.length} matching JSON${filteredJsonFiles.length === 1 ? '' : 's'} }`}
           </span>
         )}
       </div>
 
-      <div className="flex flex-wrap justify-center mx-auto py-24 gap-24 w-4/5">
+      <div className="flex flex-wrap justify-center mx-auto py-12 md:py-24 gap-20 md:gap-24 w-4/5">
         {filteredJsonFiles.map(({ jsonName, jsonContent }, index) => {
           const originalIndex = jsonIndexMap[jsonName];
           const isMinted = isFetched && projectState.token_ids_minted.includes(originalIndex.toString());
@@ -212,26 +208,26 @@ function Gallery() {
             />
           );
         })}
-        <ImageModal
-          isOpen={isImageModalOpen}
-          svgContent={imageModalContent}
-          dimensions={{ width: MAX_IMAGE_SIZE, height: MAX_IMAGE_SIZE }}
-          jsonName={selectedJsonName}
-          onClose={closeImageModal}
-        />
-        <JsonModal
-          isOpen={isJsonModalOpen}
-          jsonName={selectedJsonName}
-          jsonContent={selectedJsonContent}
-          onClose={() => setIsJsonModalOpen(false)}
-        />
-        <MintModal
-          isOpen={isMintModalOpen}
-          jsonFiles={filteredJsonFiles}
-          selectedJsonName={selectedJsonName}
-          onClose={() => setIsMintModalOpen(false)}
-        />
       </div>
+      <ImageModal
+        isOpen={isImageModalOpen}
+        svgContent={imageModalContent}
+        dimensions={{ width: MAX_IMAGE_SIZE, height: MAX_IMAGE_SIZE }}
+        jsonName={selectedJsonName}
+        onClose={closeImageModal}
+      />
+      <JsonModal
+        isOpen={isJsonModalOpen}
+        jsonName={selectedJsonName}
+        jsonContent={selectedJsonContent}
+        onClose={() => setIsJsonModalOpen(false)}
+      />
+      <MintModal
+        isOpen={isMintModalOpen}
+        jsonFiles={filteredJsonFiles}
+        selectedJsonName={selectedJsonName}
+        onClose={() => setIsMintModalOpen(false)}
+      />
     </div>
   );
 }
