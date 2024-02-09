@@ -33,7 +33,7 @@ export const Web3Provider = ({ children }) => {
       web3Instance = new Web3(window.ethereum);
     } else {
       const fallbackProvider = new Web3.providers.HttpProvider(
-        `https://goerli.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`
+        `https://sepolia.infura.io/v3/${process.env.REACT_APP_INFURA_API_KEY}`
       );
       web3Instance = new Web3(fallbackProvider);
     }

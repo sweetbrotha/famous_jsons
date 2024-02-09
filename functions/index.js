@@ -6,7 +6,7 @@ const db = admin.firestore();
 const firestoreStateRef = db.doc("state/firestore");
 
 const Web3 = require("web3");
-const rpcURL = `https://goerli.infura.io/v3/${functions.config().infura.key}`;
+const rpcURL = `https://sepolia.infura.io/v3/${functions.config().infura.key}`;
 const web3 = new Web3(rpcURL);
 const contractAddress = "0x781D0b802A32224f0d6670Bbb5654A90B1C2a6A0";
 const fs = require("fs");
