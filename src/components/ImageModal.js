@@ -5,7 +5,7 @@ import svgPanZoom from 'svg-pan-zoom';
 import { debounce } from 'lodash';
 
 export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonName, onClose }) {
-  
+
   const MIN_ZOOM = 1;
 
   const svgContainerRef = useRef(null);
@@ -83,6 +83,8 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       panZoomInstanceRef.current = svgPanZoom(svgContainerRef.current, {
         beforePan: beforePan,
         beforeZoom: beforeZoom,
+        zoomEnabled: true,
+        controlIconsEnabled: true,
       });
     }
     return () => {
@@ -130,7 +132,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [isOpen, triggerRerender]);  
+  }, [isOpen, triggerRerender]);
 
   if (!isOpen) return null;
 
