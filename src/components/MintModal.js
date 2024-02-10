@@ -216,7 +216,7 @@ function MintModal({ isOpen, jsonFiles, selectedJsonName, onClose }) {
 
         {/* Status Message */}
         {statusMessage && (
-          <div className="text-cyberyellow text-sm font-courier text-center mb-2">
+          <div className="text-cyberyellow text-sm font-courier text-center mb-2 px-2">
             {statusMessage}
           </div>
         )}

@@ -536,6 +536,9 @@ video {
 .top-\[0\.25rem\] {
   top: 0.25rem;
 }
+.left-5 {
+  left: 1.25rem;
+}
 .z-10 {
   z-index: 10;
 }
@@ -1187,6 +1190,10 @@ video {
 
   .md\:top-\[-1rem\] {
     top: -1rem;
+  }
+
+  .md\:left-8 {
+    left: 2rem;
   }
 
   .md\:my-4 {

@@ -10,13 +10,25 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
 
   const svgContainerRef = useRef(null);
   const panZoomInstanceRef = useRef(null);
+  const startDistanceRef = useRef(null);
+  const originalZoomRef = useRef(null);
   const [svgFrameDimensions, setSvgFrameDimensions] = useState({});
   const [renderTrigger, setRenderTrigger] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+    return () => {
+      document.body.classList.remove('no-scroll'); // remove class on unmount
+    };
+  }, [isOpen]);
+
   const triggerRerender = useCallback(() => {
-    // Trigger a re-render which re-instantiates svg-pan-zoom
-    setRenderTrigger(prev => !prev);
+    setRenderTrigger(prev => !prev); // trigger re-render, re-instantiate svg-pan-zoom
   }, []);
 
   const debouncedRerender = debounce(triggerRerender, 500);
@@ -29,10 +41,35 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     };
   }, [debouncedRerender]);
 
-  const beforeZoom = (_, newZoom) => {
-    // Prevent zooming out beyond the initial zoom level
-    return newZoom >= MIN_ZOOM;
+  const getDistanceBetweenTouches = (touches) => {
+    const dx = touches[0].pageX - touches[1].pageX;
+    const dy = touches[0].pageY - touches[1].pageY;
+    return Math.sqrt(dx * dx + dy * dy);
   };
+
+  const handleTouchStart = useCallback((event) => {
+    if (event.touches.length === 2) { // Only handle two-finger touch
+      event.preventDefault(); // Prevent default behavior to capture pinch-zoom gesture
+      const startDistance = getDistanceBetweenTouches(event.touches);
+      startDistanceRef.current = startDistance;
+      originalZoomRef.current = panZoomInstanceRef.current.getZoom();
+    }
+  }, []);
+
+  const handleTouchMove = useCallback((event) => {
+    if (event.touches.length === 2) {
+      event.preventDefault();
+      const startDistance = startDistanceRef.current;
+      const originalZoom = originalZoomRef.current;
+      const currentDistance = getDistanceBetweenTouches(event.touches);
+      const zoomFactor = currentDistance / startDistance;
+      const newZoom = Math.max(MIN_ZOOM, originalZoom * zoomFactor);
+      if (newZoom === originalZoom) {
+        return; // zoomed maximally/minimally, do nothing
+      }
+      panZoomInstanceRef.current.zoom(newZoom);
+    }
+  }, []);
 
   const beforePan = (_, newPan) => {
     // Calculate the boundaries
@@ -82,13 +119,12 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       // Initialize svg-pan-zoom
       panZoomInstanceRef.current = svgPanZoom(svgContainerRef.current, {
         beforePan: beforePan,
-        beforeZoom: beforeZoom,
-        zoomEnabled: true,
-        controlIconsEnabled: true,
+        dblClickZoomEnabled: false,
+        minZoom: MIN_ZOOM,
       });
     }
     return () => {
-      // Cleanup svg-pan-zoom instance when component unmounts or dimensions change
+      // Cleanup svg-pan-zoom instance on component unmount
       if (panZoomInstanceRef.current) {
         panZoomInstanceRef.current.destroy();
         panZoomInstanceRef.current = null;
@@ -97,16 +133,34 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
   }, [isOpen, renderTrigger, dimensions, svgContent]);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('no-scroll');
-    } else {
-      document.body.classList.remove('no-scroll');
+    const svgElement = svgContainerRef.current;
+    if (svgElement) {
+      // set up touch listeners
+      svgElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+      svgElement.addEventListener('touchmove', handleTouchMove, { passive: false });
     }
-    // Cleanup function to ensure we remove the class when the component unmounts
+
     return () => {
-      document.body.classList.remove('no-scroll');
+      if (svgElement) {
+        // tear down touch listeners
+        svgElement.removeEventListener('touchstart', handleTouchStart);
+        svgElement.removeEventListener('touchmove', handleTouchMove);
+      }
     };
-  }, [isOpen]);
+  }, [isOpen, renderTrigger, handleTouchStart, handleTouchMove]);
+
+  (function () {
+    console.log = function (message) {
+      // Display the log in UI
+      var logElement = document.getElementById('log');
+      if (!logElement) {
+        logElement = document.createElement('div');
+        logElement.id = 'log';
+        document.body.appendChild(logElement);
+      }
+      logElement.innerHTML += message + '<br>';
+    };
+  })();
 
   const onReset = () => {
     triggerRerender();
@@ -117,7 +171,8 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
   };
 
   const onHelp = () => {
-    setShowHelp(prevShowHelp => !prevShowHelp);
+    //setShowHelp(prevShowHelp => !prevShowHelp);
+    console.log(panZoomInstanceRef.current.getZoom());
   };
 
   useEffect(() => {
@@ -134,6 +189,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     };
   }, [isOpen, triggerRerender]);
 
+  // Don't render anything if this isn't open
   if (!isOpen) return null;
 
   return (
@@ -144,6 +200,10 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       >
         ×
       </button>
+      <div
+        id="log"
+        className="absolute top-4 md:top-8 left-5 md:left-8 text-white text-xs font-courier"
+      />
 
       {/* Container for the SVG and its related elements */}
       <div className="w-full flex flex-col items-center justify-center relative" style={svgFrameDimensions}>
@@ -165,7 +225,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
         />
         {/* Help Text */}
         <div className={`absolute top-[-2.5rem] font-courier text-lightgray text-xxxs md:text-xs text-center transition-opacity duration-1000 ease-in-out ${showHelp ? 'opacity-100' : 'opacity-0'}`}>
-          <p>{'{'} pinch, scroll, or double-click to zoom {'}'}</p>
+          <p>{'{'} pinch or scroll to zoom {'}'}</p>
           <p>{'{'} click and drag to to pan {'}'}</p>
         </div>
       </div>
