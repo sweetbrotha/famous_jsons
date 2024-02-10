@@ -149,19 +149,6 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
     };
   }, [isOpen, renderTrigger, handleTouchStart, handleTouchMove]);
 
-  (function () {
-    console.log = function (message) {
-      // Display the log in UI
-      var logElement = document.getElementById('log');
-      if (!logElement) {
-        logElement = document.createElement('div');
-        logElement.id = 'log';
-        document.body.appendChild(logElement);
-      }
-      logElement.innerHTML += message + '<br>';
-    };
-  })();
-
   const onReset = () => {
     triggerRerender();
   };
@@ -171,8 +158,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
   };
 
   const onHelp = () => {
-    //setShowHelp(prevShowHelp => !prevShowHelp);
-    console.log(panZoomInstanceRef.current.getZoom());
+    setShowHelp(prevShowHelp => !prevShowHelp);
   };
 
   useEffect(() => {
