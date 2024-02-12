@@ -68,7 +68,7 @@ export function JsonModal({ isOpen, jsonName, jsonContent, onClose }) {
       </div>
   
       {/* Icon Buttons */}
-      <div className="flex space-x-4 md:space-x-6 pt-4">
+      <div className="flex space-x-6 pt-4">
         <IconButton name="copy" onClick={handleCopyClick} />
         <IconButton name="close" onClick={onClose} />
       </div>

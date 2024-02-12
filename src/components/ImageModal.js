@@ -217,7 +217,7 @@ export function ImageModal({ isOpen, svgContent, dimensions, uploadName, jsonNam
       </div>
 
       {/* Icon Buttons */}
-      <div className="flex space-x-4 md:space-x-6 pt-4">
+      <div className="flex space-x-6 pt-4">
         <IconButton name="reset" onClick={onReset} />
         {!jsonName && <IconButton name="save" onClick={onSave} />}
         <IconButton name="help" onClick={onHelp} isPressed={showHelp} />

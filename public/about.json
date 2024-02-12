@@ -3,10 +3,11 @@
   "project description": "an ode to JavaScript Object Notation and public figures with a certain name",
   "total Famous JSONs": 25,
   "art medium": "digital typographic portrait",
-  "year of creation": 2023,
+  "year of creation": 2024,
   "programming language": "javascript",
   "blockchain": "Ethereum",
-  "mint price": "0.04 ETH",
+  "mint price formula": "10 x (num_jsons_minted) x (.75 ^ hours_since_last_mint)",
+  "time until free mint": "always < 44 hours!",
   "target audience": [
     "Jason lovers",
     "Jayson lovers",
@@ -15,6 +16,10 @@
   "personal all-time favorite JSONs": [
     "my late uncle Jason",
     "my friend from college Jason"
+  ],
+  "website formats": [
+    "desktop (best)",
+    "mobile"
   ],
   "honorable mentions": [
     "JSON Aldean",

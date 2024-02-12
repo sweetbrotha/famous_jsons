@@ -78,8 +78,11 @@ function Gallery() {
     setFilteredJsonFiles(matchedFiles);
   }, [searchTerm, jsonFiles, showUnmintedOnly, isFetched, projectState]);
 
-  const closeImageModal = () => {
+  const closeAnyModal = () => {
     setIsImageModalOpen(false);
+    setIsJsonModalOpen(false);
+    setIsMintModalOpen(false);
+    setSelectedJsonName(''); // unselect json
     setImageModalContent(''); // clear large content, free up memory
   }
 
@@ -116,18 +119,12 @@ function Gallery() {
   };
 
   const openJsonModal = (jsonName, jsonContent) => {
-    // never have multiple modals open
-    closeImageModal();
-    setIsMintModalOpen(false);
     setSelectedJsonName(jsonName);
     setSelectedJsonContent(jsonContent);
     setIsJsonModalOpen(true);
   };
 
   const openMintModal = (jsonName) => {
-    // never have multiple modals open
-    closeImageModal();
-    setIsJsonModalOpen(false);
     setSelectedJsonName(jsonName);
     setIsMintModalOpen(true);
   }
@@ -214,19 +211,19 @@ function Gallery() {
         svgContent={imageModalContent}
         dimensions={{ width: MAX_IMAGE_SIZE, height: MAX_IMAGE_SIZE }}
         jsonName={selectedJsonName}
-        onClose={closeImageModal}
+        onClose={closeAnyModal}
       />
       <JsonModal
         isOpen={isJsonModalOpen}
         jsonName={selectedJsonName}
         jsonContent={selectedJsonContent}
-        onClose={() => setIsJsonModalOpen(false)}
+        onClose={closeAnyModal}
       />
       <MintModal
         isOpen={isMintModalOpen}
         jsonFiles={filteredJsonFiles}
         selectedJsonName={selectedJsonName}
-        onClose={() => setIsMintModalOpen(false)}
+        onClose={closeAnyModal}
       />
     </div>
   );
