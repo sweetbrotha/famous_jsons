@@ -6,9 +6,9 @@ const db = admin.firestore();
 const firestoreStateRef = db.doc("state/firestore");
 
 const Web3 = require("web3");
-const rpcURL = `https://sepolia.infura.io/v3/${functions.config().infura.key}`;
+const rpcURL = `https://mainnet.infura.io/v3/${functions.config().infura.key}`;
 const web3 = new Web3(rpcURL);
-const contractAddress = "0x781D0b802A32224f0d6670Bbb5654A90B1C2a6A0";
+const contractAddress = "0x781d0b802a32224f0d6670bbb5654a90b1c2a6a0";
 const fs = require("fs");
 const abiJsonFile = "./abi.json";
 const abi = JSON.parse(fs.readFileSync(abiJsonFile));
@@ -31,7 +31,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors")({
   origin: [
-    "http://localhost:3000", // TODO: comment this out
     "https://famousjsons.com",
   ],
 });
