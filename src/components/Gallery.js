@@ -197,7 +197,7 @@ function Gallery() {
               key={index}
               jsonName={jsonName}
               jsonContent={jsonContent}
-              itemId={index}
+              itemId={originalIndex}
               onArtClick={() => openImageModal(jsonName)}
               onJsonClick={() => openJsonModal(jsonName, jsonContent)}
               isMinted={isMinted}
@@ -221,7 +221,7 @@ function Gallery() {
       />
       <MintModal
         isOpen={isMintModalOpen}
-        jsonFiles={filteredJsonFiles}
+        jsonFiles={jsonFiles}
         selectedJsonName={selectedJsonName}
         onClose={closeAnyModal}
       />
